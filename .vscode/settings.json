@@ -1,0 +1,9 @@
+{
+    "nuxt.isNuxtApp": false,
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 3, IncludeBlocks: Merge, IndentGotoLabels: true, KeepEmptyLinesAtTheStartOfBlocks: true}",
+    "C_Cpp.errorSquiggles": "enabled",
+    "files.associations": {
+        "random": "cpp",
+        "iostream": "cpp"
+    }
+}
