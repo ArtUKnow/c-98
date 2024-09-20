@@ -1,10 +1,10 @@
 #include <iostream>
-
+#include <string>
 #include "lib.h"
-
-using namespace std;
+#include "vowels.h"
 
 int main() {
-    cout << "c-98: " << endl
-         << A() << endl;
+    std::string input = "lol check this";
+    int count = vowels_counter(input);
+    std::cout <<"c-98" << count << std::endl;
 }
