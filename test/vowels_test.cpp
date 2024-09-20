@@ -28,12 +28,12 @@ TEST(test_05, basic_test_set) {
     ASSERT_TRUE(result == 3);
 }
 
-TEST(test_05, basic_test_set) {
+TEST(test_06, basic_test_set) {
     std::string strs = "                                       a                            g fg";
     int result = vowels_counter(strs);
     ASSERT_TRUE(result == 1);
 }
-TEST(test_06, basic_test_set) {
+TEST(test_07, basic_test_set) {
     std::string strs = "1234";
     int result = vowels_counter(strs);
     ASSERT_TRUE(result == 0);
