@@ -2,7 +2,7 @@
 
 # C-98: Object-Oriented Programming Practice
 
-![C++ Logo]([https://upload.wikimedia.org/wikipedia/commons/1/18/ISO_C%2B%2B_Logo.svg](https://media.discordapp.net/attachments/1132614746449903737/1286756616611430512/undefined_image_-_2024-09-20T211636.124.png?ex=66ef10fc&is=66edbf7c&hm=7ecd5ef774b26e2ac9a9ed26046d1439200e1ed6209988848f457a60fc19c587&=&format=webp&quality=lossless&width=875&height=875))
+![C++ Logo](https://media.discordapp.net/attachments/1132614746449903737/1286756616611430512/undefined_image_-_2024-09-20T211636.124.png?ex=66ef10fc&is=66edbf7c&hm=7ecd5ef774b26e2ac9a9ed26046d1439200e1ed6209988848f457a60fc19c587&=&format=webp&quality=lossless&width=875&height=875)
 
 Welcome to **C-98**, a repository dedicated to my journey in mastering Object-Oriented Programming (OOP) principles using C++. This collection of projects and exercises aims to demonstrate my understanding and application of core OOP concepts such as classes, inheritance, polymorphism, encapsulation, and more.
 
