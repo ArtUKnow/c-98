@@ -2,7 +2,6 @@
 #include <string>
 #include <gtest/gtest.h>
 
-// default
 TEST(test_01, start_test) {
     std::string strs = "hello world";
     int result = vowels_counter(strs);
