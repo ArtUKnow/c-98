@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include "lib.h"
 #include "vowels.h"
 
 int main() {
