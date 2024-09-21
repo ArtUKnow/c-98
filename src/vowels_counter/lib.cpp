@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 
-// тут думаю коментировать не надо :) Можно было через find костылями или for :
 int vowels_counter(std::string strs) {
     std::string vowels = "aeiouyAEIOUY"; // забыл про заглавные
     int count = 0;
