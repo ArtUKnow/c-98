@@ -1,4 +1,4 @@
 #pragma once
 #include <string>
 
-int vowels_counter(std::string& strs);
+int vowels_counter(std::string strs);
