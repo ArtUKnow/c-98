@@ -86,7 +86,7 @@ Four Four::add(const Four& other) const {
     }
 }
 
-Four Four::sub(const Four& other) const {
+Four Four::subtract(const Four& other) const {
     if (isLesser(other)) {
         throw std::invalid_argument("Bad result... num < 0");
     }

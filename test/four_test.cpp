@@ -39,6 +39,6 @@ TEST(FourTest, AddTest) {
 TEST(FourTest, SubTest) {
     Four num1("210");
     Four num2("102");
-    Four result = num1.sub(num2);
+    Four result = num1.subtract(num2);
     ASSERT_TRUE(result.isEqual(Four("102")));
 }
