@@ -29,9 +29,16 @@ TEST(FourTest, ZeroNumTest) {
     ASSERT_TRUE(result);
 }
 
-TEST(FourTest, AdditionTest) {
+TEST(FourTest, AddTest) {
     Four num1("123");
     Four num2("231");
     Four result = num1.add(num2);
     ASSERT_TRUE(result.isEqual(Four("1020")));
+}
+
+TEST(FourTest, SubTest) {
+    Four num1("210");
+    Four num2("102");
+    Four result = num1.subtract(num2);
+    ASSERT_TRUE(result.isEqual(Four("102")));
 }
