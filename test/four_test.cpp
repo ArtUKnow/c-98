@@ -33,5 +33,5 @@ TEST(FourTest, AdditionTest) {
     Four num1("123");
     Four num2("231");
     Four result = num1.add(num2);
-    ASSERT_TRUE(result.isEqual("1020"));
+    ASSERT_TRUE(result.isEqual(Four("1020")));
 }
