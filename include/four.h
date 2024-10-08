@@ -14,7 +14,7 @@ public:
     Four(unsigned char* digits, size_t size);
     ~Four() noexcept;
     Four add(const Four& other) const;
-    void subtract(const Four& other);
+    void sub(const Four& other);
     bool isEqual(const Four& other) const;
     bool isGreater(const Four& other) const;
     bool isLesser(const Four& other) const;

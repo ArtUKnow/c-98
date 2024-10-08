@@ -2,7 +2,7 @@
 
 void Four::checkValidDigit(unsigned char digit) const {
     if (digit > 3) {
-        throw std::invalid_argument("Четвертичная цифра должна быть от 0 до 3");
+        throw std::invalid_argument("Not in range ( 0 - 3 )");
     }
 }
 
@@ -56,7 +56,7 @@ Four::Four(Four&& other) noexcept {
 
 Four::Four(unsigned char* digits, size_t size) : size(size), _capacity(size) {
     _digits = new unsigned char[_capacity];
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i=0; i < size;i++) {
         _digits[i] = digits[i];
     }
 }
@@ -70,7 +70,7 @@ Four Four::add(const Four& other) const {
     unsigned char* resultDigits = new unsigned char[maxSize + 1](); 
     unsigned char carry = 0;
 
-    for (size_t i = 0; i < maxSize; i++) {
+    for (size_t i=0; i < maxSize;i++) {
         unsigned char this_digit = (i < size) ? _digits[i] : 0;
         unsigned char other_digit = (i < other.size) ? other._digits[i] : 0;
         unsigned char sum = this_digit + other_digit + carry;
@@ -78,7 +78,7 @@ Four Four::add(const Four& other) const {
         carry = sum / 4;
     }
 
-    if (carry > 0) {
+    if (carry > 0){
         resultDigits[maxSize] = carry;
         return Four(resultDigits, maxSize + 1);
     } else {
@@ -86,24 +86,25 @@ Four Four::add(const Four& other) const {
     }
 }
 
-void Four::subtract(const Four& other) {
+Four Four::sub(const Four& other) const {
     if (isLesser(other)) {
-        throw std::invalid_argument("Результат будет отрицательным");
+        throw std::invalid_argument("Bad result... num < 0");
     }
-
+    unsigned char* resultDigits = new unsigned char[size]();
     unsigned char borrow = 0;
+
     for (size_t i = 0; i < size; i++) {
         unsigned char this_digit = _digits[i];
-        unsigned char other_digit = (i < other.size) ? other._digits[i] : 0;
-
-        if (this_digit < other_digit + borrow) {
-            _digits[i] = this_digit + 4 - other_digit - borrow;
+        unsigned char other_digit = (i < other.size) ? other._digits[i] :0;
+        if(this_digit < other_digit + borrow) {
+            resultDigits[i] = this_digit + 4 - other_digit - borrow;
             borrow = 1;
         } else {
-            _digits[i] = this_digit - other_digit - borrow;
+            resultDigits[i] = this_digit - other_digit - borrow;
             borrow = 0;
         }
     }
+    return Four(resultDigits, size);
 }
 
 bool Four::isEqual(const Four& other) const {
@@ -115,9 +116,12 @@ bool Four::isEqual(const Four& other) const {
 }
 
 bool Four::isGreater(const Four& other) const {
-    if (size > other.size) return true;
-    if (size < other.size) return false;
-
+    if (size > other.size){
+        return true;
+    } 
+    if (size < other.size){
+        return false;
+    }
     for (size_t i = size; i > 0; i--) {
         if (_digits[i - 1] > other._digits[i - 1]) return true;
         if (_digits[i - 1] < other._digits[i - 1]) return false;
@@ -129,7 +133,7 @@ bool Four::isLesser(const Four& other) const {
     return !isGreater(other) && !isEqual(other);
 }
 
-void Four::print() const {
+void Four::print() const{
     for (size_t i = size; i > 0; i--) {
         std::cout << (int)_digits[i - 1];
     }
