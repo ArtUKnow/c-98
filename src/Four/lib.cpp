@@ -2,7 +2,6 @@
 
 void Four::checkValidDigit(unsigned char digit) const {
     if (digit > 3) {
-        throw std::invalid_argument("Not in range ( 0 - 3 )");
     }
 }
 
@@ -44,11 +43,7 @@ Four::Four(const Four& other) {
     }
 }
 
-Four::Four(Four&& other) noexcept {
-    _digits = other._digits;
-    _capacity = other._capacity;
-    size = other.size;
-
+Four::Four(Four&& other) noexcept : _digits(other._digits), _capacity(other._capacity), size(other.size) {
     other._digits = nullptr;
     other._capacity = 0;
     other.size = 0;
