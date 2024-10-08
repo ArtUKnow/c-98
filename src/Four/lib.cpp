@@ -65,7 +65,6 @@ Four Four::add(const Four& other) const {
     size_t maxSize = std::max(size, other.size);
     unsigned char* resultDigits = new unsigned char[maxSize + 1](); 
     unsigned char carry = 0;
-
     for (size_t i = 0; i < maxSize; i++) {
         unsigned char this_digit = (i < size) ? _digits[i] : 0;
         unsigned char other_digit = (i < other.size) ? other._digits[i] : 0;
@@ -73,12 +72,14 @@ Four Four::add(const Four& other) const {
         resultDigits[i] = sum % 4;
         carry = sum / 4;
     }
-
-    Four result(carry > 0 ? Four(resultDigits, maxSize + 1) : Four(resultDigits, maxSize));
-
+    if (carry > 0) {
+        resultDigits[maxSize] = carry;
+    }
+    Four result(resultDigits, carry > 0 ? maxSize + 1 : maxSize);
     delete[] resultDigits;
     return result;
 }
+
 
 Four Four::subtract(const Four& other) const {
     if (isLesser(other)) {
