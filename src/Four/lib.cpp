@@ -1,4 +1,4 @@
-#include "four.h"
+#include "../include/four.h"
 
 void Four::checkValidDigit(unsigned char digit) const {
     if (digit > 3) {
