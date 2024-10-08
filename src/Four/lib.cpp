@@ -54,28 +54,35 @@ Four::Four(Four&& other) noexcept {
     other.size = 0;
 }
 
+Four::Four(unsigned char* digits, size_t size) : size(size), _capacity(size) {
+    _digits = new unsigned char[_capacity];
+    for (size_t i = 0; i < size; i++) {
+        _digits[i] = digits[i];
+    }
+}
+
 Four::~Four() noexcept {
     delete[] _digits;
 }
 
-void Four::add(const Four& other) {
-    size_t maxSize = (size > other.size) ? size : other.size;
-    resizeArray(maxSize + 1);
+Four Four::add(const Four& other) const {
+    size_t maxSize = std::max(size, other.size);
+    unsigned char* resultDigits = new unsigned char[maxSize + 1](); 
     unsigned char carry = 0;
 
     for (size_t i = 0; i < maxSize; i++) {
-        unsigned char this_digit= (i < size) ? _digits[i] : 0;
-        unsigned char other_digit= (i < other.size) ? other._digits[i] : 0;
-        unsigned char sum = this_digit+ other_digit+ carry;
-        _digits[i] = sum % 4;
+        unsigned char this_digit = (i < size) ? _digits[i] : 0;
+        unsigned char other_digit = (i < other.size) ? other._digits[i] : 0;
+        unsigned char sum = this_digit + other_digit + carry;
+        resultDigits[i] = sum % 4;
         carry = sum / 4;
     }
 
     if (carry > 0) {
-        _digits[maxSize] = carry;
-        size = maxSize + 1;
+        resultDigits[maxSize] = carry;
+        return Four(resultDigits, maxSize + 1);
     } else {
-        size = maxSize;
+        return Four(resultDigits, maxSize);
     }
 }
 
@@ -86,14 +93,14 @@ void Four::subtract(const Four& other) {
 
     unsigned char borrow = 0;
     for (size_t i = 0; i < size; i++) {
-        unsigned char this_digit= _digits[i];
-        unsigned char other_digit= (i < other.size) ? other._digits[i] : 0;
+        unsigned char this_digit = _digits[i];
+        unsigned char other_digit = (i < other.size) ? other._digits[i] : 0;
 
-        if (this_digit< other_digit+ borrow) {
-            _digits[i] = this_digit+ 4 - other_digit- borrow;
+        if (this_digit < other_digit + borrow) {
+            _digits[i] = this_digit + 4 - other_digit - borrow;
             borrow = 1;
         } else {
-            _digits[i] = this_digit- other_digit- borrow;
+            _digits[i] = this_digit - other_digit - borrow;
             borrow = 0;
         }
     }
