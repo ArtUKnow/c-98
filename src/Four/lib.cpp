@@ -74,13 +74,7 @@ Four Four::add(const Four& other) const {
         carry = sum / 4;
     }
 
-    Four result;
-    if (carry > 0) {
-        result = Four(resultDigits, maxSize + 1);
-    } 
-    else{
-        result = Four(resultDigits, maxSize);
-    }
+    Four result(carry > 0 ? Four(resultDigits, maxSize + 1) : Four(resultDigits, maxSize));
 
     delete[] resultDigits;
     return result;
@@ -90,26 +84,25 @@ Four Four::subtract(const Four& other) const {
     if (isLesser(other)) {
         throw std::invalid_argument("Bad result... num < 0");
     }
-
-    unsigned char* resultDigits = new unsigned char[size](); // Выделяем память для результата
+    unsigned char* resultDigits = new unsigned char[size](); 
     unsigned char borrow = 0;
-
     for (size_t i = 0; i < size; i++) {
         unsigned char this_digit = _digits[i];
         unsigned char other_digit = (i < other.size) ? other._digits[i] : 0;
         if (this_digit < other_digit + borrow) {
             resultDigits[i] = this_digit + 4 - other_digit - borrow;
             borrow = 1;
-        } else {
+        }
+        else {
             resultDigits[i] = this_digit - other_digit - borrow;
             borrow = 0;
         }
     }
-
     Four result(resultDigits, size);  
     delete[] resultDigits;
     return result;
 }
+
 
 
 bool Four::isEqual(const Four& other) const {
