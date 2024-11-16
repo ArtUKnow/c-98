@@ -7,7 +7,6 @@
 #include <cstddef>
 #include <string>
 
-// Структура Complex
 struct Complex {
     int a;
     double b;
@@ -20,7 +19,6 @@ struct Complex {
     }
 };
 
-// Собственная memory_resource, сохраняющая информацию об аллокациях
 class ListMemoryResource : public std::pmr::memory_resource {
 public:
     ListMemoryResource() = default;
@@ -40,24 +38,30 @@ private:
     std::list<MemoryBlock> allocated_blocks;
 };
 
-// Шаблонный класс итератора
 template <typename T>
-class MyListIterator {
+class DListIterator {
 public:
-    explicit MyListIterator(typename T::Node* node) : current(node) {}
-
+    explicit DListIterator(typename T::Node* node) : current(node) {}
     typename T::value_type& operator*() { return current->value; }
-    MyListIterator& operator++() { current = current->next; return *this; }
-    MyListIterator operator++(int) { MyListIterator temp = *this; current = current->next; return temp; }
-    bool operator!=(const MyListIterator& other) const { return current != other.current; }
+    DListIterator& operator++() { 
+        current = current->next; 
+        return *this; 
+    }
+    DListIterator operator++(int){ 
+        DListIterator temp = *this;
+        current = current->next; 
+        return temp; 
+    }
+    bool operator!=(const DListIterator& other) const { 
+        return current != other.current; 
+    }
 
 private:
     typename T::Node* current;
 };
 
-// Шаблонный класс двусвязного списка
 template <typename T>
-class MyList {
+class DList {
     public:
         struct Node {
             T value;
@@ -67,20 +71,26 @@ class MyList {
             explicit Node(const T& value) : value(value) {}
         };
         using value_type = T;
-        using iterator = MyListIterator<MyList<T>>;
+        using iterator = DListIterator<DList<T>>;
 
-        explicit MyList(ListMemoryResource* resource);
-        ~MyList();
+        explicit DList(ListMemoryResource* resource);
+        ~DList();
 
         void push_back(const T& value);
         void push_front(const T& value);
         void pop_back();
         void pop_front();
 
-        iterator begin() const { return iterator(head); }
-        iterator end() const { return iterator(nullptr); }
+        iterator begin() const {
+            return iterator(head);
+        }
+        iterator end() const { 
+            return iterator(nullptr); 
+        }
 
-        size_t get_size() const { return size; }
+        size_t get_size() const { 
+            return size; 
+        }
 
     private:
         Node* head = nullptr;

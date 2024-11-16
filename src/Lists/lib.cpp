@@ -1,6 +1,5 @@
 #include "../../include/lists.h"
 
-// Реализация ListMemoryResource
 ListMemoryResource::~ListMemoryResource() {
     for (auto& block : allocated_blocks) {
         ::operator delete(block.ptr);
@@ -28,13 +27,12 @@ bool ListMemoryResource::do_is_equal(const std::pmr::memory_resource& other) con
     return this == &other;
 }
 
-// Реализация MyList
 template <typename T>
-MyList<T>::MyList(ListMemoryResource* resource)
+DList<T>::DList(ListMemoryResource* resource)
     : allocator(std::pmr::polymorphic_allocator<Node>(resource)) {}
 
 template <typename T>
-MyList<T>::~MyList() {
+DList<T>::~DList() {
     while (head) {
         Node* next = head->next;
         std::allocator_traits<decltype(allocator)>::destroy(allocator, head);
@@ -44,7 +42,7 @@ MyList<T>::~MyList() {
 }
 
 template <typename T>
-void MyList<T>::push_back(const T& value) {
+void DList<T>::push_back(const T& value) {
     Node* node = allocator.allocate(1);
     std::allocator_traits<decltype(allocator)>::construct(allocator, node, value);
     if (!tail) {
@@ -58,7 +56,7 @@ void MyList<T>::push_back(const T& value) {
 }
 
 template <typename T>
-void MyList<T>::push_front(const T& value) {
+void DList<T>::push_front(const T& value) {
     Node* node = allocator.allocate(1);
     std::allocator_traits<decltype(allocator)>::construct(allocator, node, value);
     if (!head) {
@@ -72,7 +70,7 @@ void MyList<T>::push_front(const T& value) {
 }
 
 template <typename T>
-void MyList<T>::pop_back() {
+void DList<T>::pop_back() {
     if (!tail) return;
     Node* node = tail;
     tail = tail->prev;
@@ -87,7 +85,7 @@ void MyList<T>::pop_back() {
 }
 
 template <typename T>
-void MyList<T>::pop_front() {
+void DList<T>::pop_front() {
     if (!head) return;
     Node* node = head;
     head = head->next;
@@ -101,6 +99,5 @@ void MyList<T>::pop_front() {
     --size;
 }
 
-// Эксплицитная инстанциация шаблонов
-template class MyList<int>;
-template class MyList<Complex>;
+template class DList<int>;
+template class DList<Complex>;
