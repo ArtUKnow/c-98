@@ -46,7 +46,7 @@ MyList<T>::~MyList() {
 template <typename T>
 void MyList<T>::push_back(const T& value) {
     Node* node = allocator.allocate(1);
-    std::allocator_traits<decltype(allocator)>::construct(allocator, node, value); // Передаем значение
+    std::allocator_traits<decltype(allocator)>::construct(allocator, node, value);
     if (!tail) {
         head = tail = node;
     } else {
@@ -60,7 +60,7 @@ void MyList<T>::push_back(const T& value) {
 template <typename T>
 void MyList<T>::push_front(const T& value) {
     Node* node = allocator.allocate(1);
-    std::allocator_traits<decltype(allocator)>::construct(allocator, node, value); // Передаем значение
+    std::allocator_traits<decltype(allocator)>::construct(allocator, node, value);
     if (!head) {
         head = tail = node;
     } else {
