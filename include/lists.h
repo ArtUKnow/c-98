@@ -5,6 +5,7 @@
 #include <iostream>
 #include <list>
 #include <cstddef>
+#include <string>
 
 // Структура Complex
 struct Complex {
@@ -39,6 +40,34 @@ private:
     // Информация о выделенных блоках памяти хранится в std::list
     std::list<MemoryBlock> allocated_blocks;
 };
+
+// Реализация ListMemoryResource
+ListMemoryResource::~ListMemoryResource() {
+    for (auto& block : allocated_blocks) {
+        ::operator delete(block.ptr, block.size);
+    }
+    allocated_blocks.clear();
+}
+
+void* ListMemoryResource::do_allocate(size_t bytes, size_t alignment) {
+    void* ptr = ::operator new(bytes, std::align_val_t(alignment));
+    allocated_blocks.push_back({ptr, bytes});
+    return ptr;
+}
+
+void ListMemoryResource::do_deallocate(void* p, size_t bytes, size_t alignment) {
+    for (auto it = allocated_blocks.begin(); it != allocated_blocks.end(); ++it) {
+        if (it->ptr == p) {
+            allocated_blocks.erase(it);
+            break;
+        }
+    }
+    ::operator delete(p, bytes, std::align_val_t(alignment));
+}
+
+bool ListMemoryResource::do_is_equal(const std::pmr::memory_resource& other) const noexcept {
+    return this == &other;
+}
 
 // Шаблонный класс итератора
 template <typename T>
