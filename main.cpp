@@ -1,78 +1,70 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "./include/figures.h"
+#include "./include/meta.h"
+#include <iostream>
+#include <memory>
 
 int main() {
-    std::vector<std::unique_ptr<Figure>> figures;
+    Array<std::shared_ptr<Figure<double>>> figures;
     int choice;
 
     while (true) {
         std::cout << "\nSelect:\n";
-        std::cout << "1. CIN Trapecia\n";
-        std::cout << "2. CIN Romb\n";
-        std::cout << "3. CIN Penta\n";
-        std::cout << "4. COUT ALL FIGURES\n";
-        std::cout << "5. TOTAL AREA FIGURES\n";
-        std::cout << "6. DELETE FIGURE PER IDX\n";
-        std::cout << "0. EXIT\n";
+        std::cout << "1. Add Trapecia\n";
+        std::cout << "2. Add Romb\n";
+        std::cout << "3. Add Penta\n";
+        std::cout << "4. Print All Figures\n";
+        std::cout << "5. Total Area of Figures\n";
+        std::cout << "6. Delete Figure by Index\n";
+        std::cout << "0. Exit\n";
         std::cout << "¬: ";
         std::cin >> choice;
 
         switch (choice) {
-            case 1: { 
-                double a,b,h;
-                std::cout << "CIN a, b, h: ";
+            case 1: {
+                double a, b, h;
+                std::cout << "Enter a, b, h: ";
                 std::cin >> a >> b >> h;
-                figures.push_back(std::make_unique<Trapecia>(a, b, h));
+                figures.add(std::make_shared<Trapecia<double>>(a, b, h));
                 break;
             }
-            case 2:{
+            case 2: {
                 double d1, d2;
-                std::cout << "CIN d1,d2: ";
+                std::cout << "Enter d1, d2: ";
                 std::cin >> d1 >> d2;
-                figures.push_back(std::make_unique<Romb>(d1, d2));
+                figures.add(std::make_shared<Romb<double>>(d1, d2));
                 break;
             }
-            case 3:{
+            case 3: {
                 double side;
-                std::cout << "Cin size ";
+                std::cout << "Enter side length: ";
                 std::cin >> side;
-                figures.push_back(std::make_unique<Penta>(side));
+                figures.add(std::make_shared<Penta<double>>(side));
                 break;
             }
             case 4: {
-                for (size_t i = 0; i < figures.size(); ++i) {
-                    std::cout << "Figure " << i + 1<< ":\n";
-                    std::cout << "Center: (" << figures[i]->center().first <<", "<< figures[i]->center().second << ")\n";
-                    std::cout << "Area: " << static_cast<double>(*figures[i]) << "\n";
+                for (size_t i = 0; i < figures.getSize(); ++i) {
+                    figures[i]->print(std::cout);
+                    std::cout << std::endl;
                 }
                 break;
             }
             case 5: {
-                double totalArea = 0;
-                for (const auto& figure : figures) {
-                    totalArea += static_cast<double>(*figure);
-                }
-                std::cout<<"Full area: "<<totalArea<<"\n";
+                std::cout << "Total area: " << figures.totalArea() << std::endl;
                 break;
             }
-            case 6:{
-                int index;
-                std::cout<<"Figures for deleted ( from 1 ): ";
-                std::cin>>index;
-                if (index < 1 || index > figures.size()) {
-                    std::cout << "Nun idx.\n";
-                } else {
-                    figures.erase(figures.begin() + (index - 1));
-                    std::cout << "Figure deleted\n";
-                }
+            case 6: {
+                size_t index;
+                std::cout << "Enter index to remove: ";
+                std::cin >> index;
+                figures.remove(index);
                 break;
             }
             case 0:
                 return 0;
             default:
-                std::cout << "Nun";
+                std::cout << "Invalid choice!" << std::endl;
         }
     }
 
