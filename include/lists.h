@@ -42,18 +42,26 @@ template <typename T>
 class DListIterator {
 public:
     explicit DListIterator(typename T::Node* node) : current(node) {}
+
     typename T::value_type& operator*() { return current->value; }
-    DListIterator& operator++() { 
-        current = current->next; 
-        return *this; 
+
+    DListIterator& operator++() {
+        current = current->next;
+        return *this;
     }
-    DListIterator operator++(int){ 
+
+    DListIterator operator++(int) {
         DListIterator temp = *this;
-        current = current->next; 
-        return temp; 
+        current = current->next;
+        return temp;
     }
-    bool operator!=(const DListIterator& other) const { 
-        return current != other.current; 
+
+    bool operator!=(const DListIterator& other) const {
+        return current != other.current;
+    }
+
+    bool operator==(const DListIterator& other) const {
+        return current == other.current;
     }
 
 private:
@@ -62,41 +70,43 @@ private:
 
 template <typename T>
 class DList {
-    public:
-        struct Node {
-            T value;
-            Node* next = nullptr;
-            Node* prev = nullptr;
+public:
+    struct Node {
+        T value;
+        Node* next = nullptr;
+        Node* prev = nullptr;
 
-            explicit Node(const T& value) : value(value) {}
-        };
-        using value_type = T;
-        using iterator = DListIterator<DList<T>>;
+        explicit Node(const T& value) : value(value) {}
+    };
 
-        explicit DList(ListMemoryResource* resource);
-        ~DList();
+    using value_type = T;
+    using iterator = DListIterator<DList<T>>;
 
-        void push_back(const T& value);
-        void push_front(const T& value);
-        void pop_back();
-        void pop_front();
+    explicit DList(ListMemoryResource* resource);
+    ~DList();
 
-        iterator begin() const {
-            return iterator(head);
-        }
-        iterator end() const { 
-            return iterator(nullptr); 
-        }
+    void push_back(const T& value);
+    void push_front(const T& value);
+    void pop_back();
+    void pop_front();
 
-        size_t get_size() const { 
-            return size; 
-        }
+    iterator begin() const {
+        return iterator(head);
+    }
 
-    private:
-        Node* head = nullptr;
-        Node* tail = nullptr;
-        size_t size = 0;
-        std::pmr::polymorphic_allocator<Node> allocator;
+    iterator end() const {
+        return iterator(nullptr);
+    }
+
+    size_t get_size() const {
+        return size;
+    }
+
+private:
+    Node* head = nullptr;
+    Node* tail = nullptr;
+    size_t size = 0;
+    std::pmr::polymorphic_allocator<Node> allocator;
 };
 
 #endif // LIB_H
