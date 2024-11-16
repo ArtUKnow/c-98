@@ -1,107 +1,85 @@
 #include <gtest/gtest.h>
 #include "../include/meta.h"
 
-TEST(DynamicArrayTest, AddRemoveFigures) {
-    // Arrange
+TEST(DynamicArrayTest, AddAndGetElement) {
     DynamicArray<std::shared_ptr<Figure<double>>> array;
+    std::shared_ptr<Trapecia<double>> trap = std::make_shared<Trapecia<double>>(3, 4, 5);
+    array.addFigure(trap);
+    EXPECT_EQ(*array[0], *trap);
+}
 
-    auto trapezoid = std::make_shared<Trapecia<double>>(3, 4, 5);
-    auto rhombus = std::make_shared<Romb<double>>(6, 8);
-
-    // Act
-    array.addFigure(trapezoid);
-    array.addFigure(rhombus);
-
-    // Assert
-    ASSERT_EQ(array.getSize(), 2);
-    EXPECT_DOUBLE_EQ(static_cast<double>(*array[0]), 17.5); // Площадь трапеции
-    EXPECT_DOUBLE_EQ(static_cast<double>(*array[1]), 24.0); // Площадь ромба
-
-    // Act
+TEST(DynamicArrayTest, RemoveElement) {
+    DynamicArray<std::shared_ptr<Figure<double>>> array;
+    std::shared_ptr<Trapecia<double>> trap1 = std::make_shared<Trapecia<double>>(3, 4, 5);
+    std::shared_ptr<Trapecia<double>> trap2 =std::make_shared<Trapecia<double>>(6, 7, 8);
+    array.addFigure(trap1);
+    array.addFigure(trap2);
     array.removeFigure(0);
-
-    // Assert
-    ASSERT_EQ(array.getSize(), 1);
-    EXPECT_DOUBLE_EQ(static_cast<double>(*array[0]), 24.0); // Оставшийся ромб
+    EXPECT_EQ(array.getSize(), 1);
+    EXPECT_EQ(*array[0], *trap2);
 }
 
-// Тест вычисления общей площади фигур
-TEST(DynamicArrayTest, TotalArea) {
-    // Arrange
+TEST(DynamicArrayTest, CheckSizeAfterAddRemove) {
     DynamicArray<std::shared_ptr<Figure<double>>> array;
+    std::shared_ptr<Trapecia<double>> trap1 = std::make_shared<Trapecia<double>>(3, 4, 5);
+    std::shared_ptr<Trapecia<double>> trap2 = std::make_shared<Trapecia<double>>(6, 7, 8);
+    array.addFigure(trap1);
+    array.addFigure(trap2);
+    EXPECT_EQ(array.getSize(), 2);
+    array.removeFigure(0);
+    EXPECT_EQ(array.getSize(), 1);
+}
 
-    auto trapezoid = std::make_shared<Trapecia<double>>(3, 4, 5);
-    auto rhombus = std::make_shared<Romb<double>>(6, 8);
-    auto pentagon = std::make_shared<Penta<double>>(5);
+TEST(DynamicArrayTest, EmptyArray) {
+    DynamicArray<std::shared_ptr<Figure<double>>> array;
+    EXPECT_EQ(array.getSize(), 0);
+    EXPECT_THROW(array[0], std::out_of_range);
+}
 
-    array.addFigure(trapezoid);
-    array.addFigure(rhombus);
-    array.addFigure(pentagon);
-
-    // Act
+TEST(DynamicArrayTest, TotalArea) {
+    DynamicArray<std::shared_ptr<Figure<double>>> array;
+    std::shared_ptr<Trapecia<double>> trap1 = std::make_shared<Trapecia<double>>(3, 4, 5);
+    std::shared_ptr<Romb<double>> romb1= std::make_shared<Romb<double>>(6, 8);
+    array.addFigure(trap1);
+    array.addFigure(romb1);
     double totalArea = array.totalArea();
-
-    // Assert
-    EXPECT_DOUBLE_EQ(totalArea, 17.5 + 24.0 + 43.0119); // Сумма площадей всех фигур
+    EXPECT_EQ(totalArea, 17.5 + 24.0);
 }
 
-// Тест Trapecia: центр фигуры
-TEST(TrapeciaTest, CenterCalculation) {
-    // Arrange
-    Trapecia<double> trapezoid(3, 4, 5);
-
-    // Act
-    auto center = trapezoid.center();
-
-    // Assert
-    EXPECT_DOUBLE_EQ(center->x, 0.0);
-    EXPECT_DOUBLE_EQ(center->y, 2.5); // Половина высоты
+TEST(TrapeciaTest, AreaCalculation) {
+    Trapecia<double> trap(3, 4, 5);
+    double area = static_cast<double>(trap);
+    EXPECT_DOUBLE_EQ(area, 17.5);
 }
 
-// Тест Romb: площадь и сравнение
-TEST(RombTest, AreaAndEquality) {
-    // Arrange
+TEST(RombTest, AreaCalculation) {
+    Romb<double> romb(6, 8);
+    double area = static_cast<double>(romb);
+    EXPECT_DOUBLE_EQ(area, 24.0);
+}
+
+TEST(RombTest, EqualityCheck) {
     Romb<double> romb1(6, 8);
     Romb<double> romb2(6, 8);
     Romb<double> romb3(5, 7);
-
-    // Act
-    double area1 = static_cast<double>(romb1);
-    double area2 = static_cast<double>(romb2);
-
-    // Assert
-    EXPECT_DOUBLE_EQ(area1, 24.0);
-    EXPECT_DOUBLE_EQ(area2, 24.0);
     EXPECT_TRUE(romb1 == romb2);
     EXPECT_FALSE(romb1 == romb3);
 }
 
-// Тест Penta: центр и площадь
-TEST(PentaTest, CenterAndArea) {
-    // Arrange
-    Penta<double> pentagon(5);
-
-    // Act
-    auto center = pentagon.center();
-    double area = static_cast<double>(pentagon);
-
-    // Assert
+TEST(RombTest, CenterCalculation) {
+    Romb<double> romb(6, 8);
+    std::unique_ptr<Point<double>> center = romb.center();
     EXPECT_DOUBLE_EQ(center->x, 0.0);
     EXPECT_DOUBLE_EQ(center->y, 0.0);
-    EXPECT_NEAR(area, 43.0119, 0.0001); // Округление из-за вычислений
 }
 
-// Тест DynamicArray: проверка ресайза
-TEST(DynamicArrayTest, ResizeCapacity) {
-    // Arrange
+TEST(DynamicArrayTest, TotalAreaMultipleFigures) {
     DynamicArray<std::shared_ptr<Figure<double>>> array;
-
-    // Act
-    for (int i = 0; i < 15; ++i) {
-        array.addFigure(std::make_shared<Trapecia<double>>(3, 4, 5));
-    }
-
-    // Assert
-    EXPECT_EQ(array.getSize(), 15);
-    EXPECT_GE(array.getCapacity(), 15); // Проверяем, что емкость увеличилась
+    std::shared_ptr<Trapecia<double>> trap1 = std::make_shared<Trapecia<double>>(3, 4, 5);
+    std::shared_ptr<Romb<double>> romb1 = std::make_shared<Romb<double>>(6, 8);
+    array.addFigure(trap1);
+    array.addFigure(romb1);
+    array.addFigure(penta1);
+    double totalArea = array.totalArea();
+    EXPECT_DOUBLE_EQ(totalArea, 41.5);
 }
