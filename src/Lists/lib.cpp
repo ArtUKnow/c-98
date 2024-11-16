@@ -3,7 +3,7 @@
 // Реализация ListMemoryResource
 ListMemoryResource::~ListMemoryResource() {
     for (auto& block : allocated_blocks) {
-        ::operator delete(block.ptr, block.size);
+        ::operator delete(block.ptr);
     }
     allocated_blocks.clear();
 }
