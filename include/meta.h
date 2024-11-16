@@ -82,4 +82,23 @@ public:
     Penta& operator=(Penta<T>&& other) noexcept;
 };
 
+template <typename T>
+class Array {
+private:
+    size_t size;
+    size_t capacity;
+    std::shared_ptr<T[]> data;
+
+    void resize(size_t newCapacity);
+
+public:
+    Array();
+    void add(const T& item);
+    void remove(size_t index);
+    size_t getSize() const;
+    T& operator[](size_t index);
+    const T& operator[](size_t index) const;
+    double totalArea() const;
+};
+
 #endif // LAB_H

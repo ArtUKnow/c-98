@@ -228,3 +228,60 @@ Penta<T>& Penta<T>::operator=(Penta<T>&& other) noexcept {
     }
     return *this;
 }
+
+
+template <typename T>
+Array<T>::Array() : size(0), capacity(1) {
+    data = std::shared_ptr<T[]>(new T[capacity]);
+}
+
+template <typename T>
+void Array<T>::resize(size_t newCapacity) {
+    std::shared_ptr<T[]> newData(new T[newCapacity]);
+    for (size_t i = 0; i < size; ++i) {
+        newData[i] = std::move(data[i]);
+    }
+    data = std::move(newData);
+    capacity = newCapacity;
+}
+
+template <typename T>
+void Array<T>::add(const T& item) {
+    if (size == capacity) {
+        resize(capacity * 2);
+    }
+    data[size++] = item;
+}
+
+template <typename T>
+void Array<T>::remove(size_t index) {
+    if (index >= size) return;
+    for (size_t i = index; i < size - 1; ++i) {
+        data[i] = std::move(data[i + 1]);
+    }
+    --size;
+}
+
+template <typename T>
+size_t Array<T>::getSize() const {
+    return size;
+}
+
+template <typename T>
+T& Array<T>::operator[](size_t index) {
+    return data[index];
+}
+
+template <typename T>
+const T& Array<T>::operator[](size_t index) const {
+    return data[index];
+}
+
+template <typename T>
+double Array<T>::totalArea() const {
+    double total = 0;
+    for (size_t i = 0; i < size; ++i) {
+        total += static_cast<double>(data[i]);
+    }
+    return total;
+}
