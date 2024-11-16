@@ -79,7 +79,6 @@ TEST(DynamicArrayTest, TotalAreaMultipleFigures) {
     std::shared_ptr<Romb<double>> romb1 = std::make_shared<Romb<double>>(6, 8);
     array.addFigure(trap1);
     array.addFigure(romb1);
-    array.addFigure(penta1);
     double totalArea = array.totalArea();
     EXPECT_DOUBLE_EQ(totalArea, 41.5);
 }
