@@ -88,6 +88,7 @@ public:
     void removeFigure(size_t index);
     T& operator[](size_t index);
     size_t getSize() const;
+    size_t getCapacity() const;
     void printFigures() const;
     double totalArea() const;
 

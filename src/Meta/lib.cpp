@@ -39,6 +39,11 @@ size_t DynamicArray<T>::getSize() const {
 }
 
 template <typename T>
+size_t DynamicArray<T>::getCapacity() const {
+    return capacity;
+}
+
+template <typename T>
 void DynamicArray<T>::printFigures() const {
     for (size_t i = 0; i < size; ++i) {
         data[i]->print(std::cout);
