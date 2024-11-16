@@ -21,7 +21,7 @@ void ListMemoryResource::do_deallocate(void* p, size_t bytes, size_t alignment) 
             break;
         }
     }
-    ::operator delete(p, bytes, std::align_val_t(alignment));
+    ::operator delete(p, std::align_val_t(alignment));  // Правильное использование delete
 }
 
 bool ListMemoryResource::do_is_equal(const std::pmr::memory_resource& other) const noexcept {

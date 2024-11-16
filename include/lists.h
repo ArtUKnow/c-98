@@ -58,36 +58,35 @@ private:
 // Шаблонный класс двусвязного списка
 template <typename T>
 class MyList {
-    struct Node {
-        T value;
-        Node* next = nullptr;
-        Node* prev = nullptr;
+    public:
+        struct Node {
+            T value;
+            Node* next = nullptr;
+            Node* prev = nullptr;
 
-        explicit Node(const T& value) : value(value) {}
-    };
+            explicit Node(const T& value) : value(value) {}
+        };
+        using value_type = T;
+        using iterator = MyListIterator<MyList<T>>;
 
-public:
-    using value_type = T;
-    using iterator = MyListIterator<MyList<T>>;
+        explicit MyList(ListMemoryResource* resource);
+        ~MyList();
 
-    explicit MyList(ListMemoryResource* resource);
-    ~MyList();
+        void push_back(const T& value);
+        void push_front(const T& value);
+        void pop_back();
+        void pop_front();
 
-    void push_back(const T& value);
-    void push_front(const T& value);
-    void pop_back();
-    void pop_front();
+        iterator begin() const { return iterator(head); }
+        iterator end() const { return iterator(nullptr); }
 
-    iterator begin() const { return iterator(head); }
-    iterator end() const { return iterator(nullptr); }
+        size_t get_size() const { return size; }
 
-    size_t get_size() const { return size; }
-
-private:
-    Node* head = nullptr;
-    Node* tail = nullptr;
-    size_t size = 0;
-    std::pmr::polymorphic_allocator<Node> allocator;
+    private:
+        Node* head = nullptr;
+        Node* tail = nullptr;
+        size_t size = 0;
+        std::pmr::polymorphic_allocator<Node> allocator;
 };
 
 #endif // LIB_H
