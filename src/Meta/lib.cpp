@@ -1,6 +1,5 @@
 #include "../../include/meta.h"
 
-// Реализация DynamicArray
 template <typename T>
 DynamicArray<T>::DynamicArray() : size(0), capacity(10) {
     data = std::shared_ptr<T[]>(new T[capacity]);
@@ -69,11 +68,12 @@ void DynamicArray<T>::resize(size_t new_capacity) {
     capacity = new_capacity;
 }
 
-// Реализация Trapecia
+
 template <Scalar T>
 std::unique_ptr<Point<T>> Trapecia<T>::center() const {
     return std::make_unique<Point<T>>(0, h / 2);
 }
+
 
 template <Scalar T>
 void Trapecia<T>::print(std::ostream& os) const {
@@ -96,7 +96,6 @@ bool Trapecia<T>::operator==(const Figure<T>& other) const {
     return o && a == o->a && b == o->b && h == o->h;
 }
 
-// Реализация Romb
 template <Scalar T>
 std::unique_ptr<Point<T>> Romb<T>::center() const {
     return std::make_unique<Point<T>>(0, 0);
@@ -123,7 +122,7 @@ bool Romb<T>::operator==(const Figure<T>& other) const {
     return o && d1 == o->d1 && d2 == o->d2;
 }
 
-// Реализация Penta
+
 template <Scalar T>
 std::unique_ptr<Point<T>> Penta<T>::center() const {
     return std::make_unique<Point<T>>(0, 0);
@@ -149,8 +148,3 @@ bool Penta<T>::operator==(const Figure<T>& other) const {
     const Penta<T>* o = dynamic_cast<const Penta<T>*>(&other);
     return o && side == o->side;
 }
-
-template class Trapecia<double>;
-template class Romb<double>;
-template class Penta<double>;
-template class DynamicArray<std::shared_ptr<Figure<double>>>;
