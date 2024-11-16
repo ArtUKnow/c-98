@@ -1,4 +1,4 @@
-#include "lab.h"
+#include "../../include/meta.h"
 
 // Реализация Trapecia
 template <Scalar T>
