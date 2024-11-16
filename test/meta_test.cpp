@@ -103,5 +103,5 @@ TEST(DynamicArrayTest, ResizeCapacity) {
 
     // Assert
     EXPECT_EQ(array.getSize(), 15);
-    EXPECT_GE(array.get_capacity(), 15); // Проверяем, что емкость увеличилась
+    EXPECT_GE(array.getCapacity(), 15); // Проверяем, что емкость увеличилась
 }
