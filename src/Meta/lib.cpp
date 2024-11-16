@@ -148,3 +148,8 @@ bool Penta<T>::operator==(const Figure<T>& other) const {
     const Penta<T>* o = dynamic_cast<const Penta<T>*>(&other);
     return o && side == o->side;
 }
+
+template class Trapecia<double>;
+template class Romb<double>;
+template class Penta<double>;
+template class DynamicArray<std::shared_ptr<Figure<double>>>;
