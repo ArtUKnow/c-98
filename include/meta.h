@@ -6,18 +6,16 @@
 #include <memory>
 #include <concepts>
 
-// Концепт для проверки скалярного типа
+
 template <typename T>
 concept Scalar = std::is_arithmetic_v<T>;
 
-// Шаблонная структура точки
 template <Scalar T>
 struct Point {
     T x, y;
     Point(T x = 0, T y = 0) : x(x), y(y) {}
 };
 
-// Базовый класс фигуры
 template <Scalar T>
 class Figure {
 public:
@@ -29,7 +27,6 @@ public:
     virtual bool operator==(const Figure& other) const = 0;
 };
 
-// Трапеция
 template <Scalar T>
 class Trapecia : public Figure<T> {
 private:
@@ -44,7 +41,6 @@ public:
     bool operator==(const Figure<T>& other) const override;
 };
 
-// Ромб
 template <Scalar T>
 class Romb : public Figure<T> {
 private:
@@ -59,7 +55,6 @@ public:
     bool operator==(const Figure<T>& other) const override;
 };
 
-// Пятиугольник
 template <Scalar T>
 class Penta : public Figure<T> {
 private:
@@ -74,7 +69,6 @@ public:
     bool operator==(const Figure<T>& other) const override;
 };
 
-// Шаблон динамического массива
 template <typename T>
 class DynamicArray {
 private:
