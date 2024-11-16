@@ -2,9 +2,9 @@ name: Build and Run Tests
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, Meta, Lists]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, Meta, Lists]
 
 jobs:
   build:
