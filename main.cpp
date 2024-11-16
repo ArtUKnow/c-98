@@ -1,69 +1,37 @@
-#include "./include/meta.h"
+#include "./include/lists.h"
 #include <iostream>
-#include <memory>
+#include <string>
+
+struct Complex {
+    int a;
+    double b;
+    std::string c;
+
+    Complex(int a, double b, const std::string& c) : a(a), b(b), c(c) {}
+};
 
 int main() {
-    DynamicArray<std::shared_ptr<Figure<double>>> figures;
-    int choice;
+    ListMemoryResource resource;
 
-    while (true) {
-        std::cout << "\nMenu:\n"
-                  << "1. Add Trapecia\n"
-                  << "2. Add Romb\n"
-                  << "3. Add Penta\n"
-                  << "4. Print Figures\n"
-                  << "5. Total Area\n"
-                  << "6. Remove Figure\n"
-                  << "0. Exit\n"
-                  << "Choice: ";
-        std::cin >> choice;
+    MyList<int> intList(&resource);
+    intList.push_back(1);
+    intList.push_back(2);
+    intList.push_back(3);
 
-        if (choice == 0) break;
-
-        switch (choice) {
-            case 1: {
-                double a, b, h;
-                std::cout << "Enter a, b, h: ";
-                std::cin >> a >> b >> h;
-                figures.addFigure(std::make_shared<Trapecia<double>>(a, b, h));
-                break;
-            }
-            case 2: {
-                double d1, d2;
-                std::cout << "Enter d1, d2: ";
-                std::cin >> d1 >> d2;
-                figures.addFigure(std::make_shared<Romb<double>>(d1, d2));
-                break;
-            }
-            case 3: {
-                double side;
-                std::cout << "Enter side: ";
-                std::cin >> side;
-                figures.addFigure(std::make_shared<Penta<double>>(side));
-                break;
-            }
-            case 4:
-                figures.printFigures();
-                break;
-            case 5:
-                std::cout << "Total Area: " << figures.totalArea() << "\n";
-                break;
-            case 6: {
-                size_t index;
-                std::cout << "Enter index to remove: ";
-                std::cin >> index;
-                try {
-                    figures.removeFigure(index - 1);
-                    std::cout << "Figure removed.\n";
-                } catch (const std::exception& e) {
-                    std::cout << e.what() << "\n";
-                }
-                break;
-            }
-            default:
-                std::cout << "Invalid choice!\n";
-        }
+    std::cout << "Int List:" << std::endl;
+    for (auto& value : intList) {
+        std::cout << value << " ";
     }
+    std::cout << std::endl;
+    MyList<Complex> complexList(&resource);
+    complexList.push_back(Complex(1, 1.1, "One"));
+    complexList.push_back(Complex(2, 2.2, "Two"));
+
+    std::cout << "Complex List:" << std::endl;
+    for (auto& value : complexList) {
+        std::cout << "{ " << value.a << ", " << value.b << ", " << value.c << " } ";
+    }
+    std::cout << std::endl;
 
     return 0;
 }
