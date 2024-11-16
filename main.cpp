@@ -2,14 +2,6 @@
 #include <iostream>
 #include <string>
 
-struct Complex {
-    int a;
-    double b;
-    std::string c;
-
-    Complex(int a, double b, const std::string& c) : a(a), b(b), c(c) {}
-};
-
 int main() {
     ListMemoryResource resource;
 
