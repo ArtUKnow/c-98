@@ -18,8 +18,9 @@ void NPC::fight_notify(const std::shared_ptr<NPC> defender, bool win)
         o->on_fight(shared_from_this(), defender, win);
 }
 
-bool NPC::is_close(const std::shared_ptr<NPC> &other, size_t distance) const {
-    return std::sqrt(std::pow(x - other->x, 2) + std::pow(y - other->y, 2)) <= distance;
+bool NPC::is_close(const std::shared_ptr<NPC> &other, size_t distance) const
+{
+    return std::pow(x - other->x, 2) + std::pow(y - other->y, 2) <= std::pow(distance, 2);
 }
 
 void NPC::save(std::ostream &os)
@@ -39,10 +40,12 @@ bool NPC::operator==(const NPC &other) const
     return type == other.type && x == other.x && y == other.y;
 }
 
-bool NPC::operator<(const NPC &other) const {
-    return std::tie(type, x, y) < std::tie(other.type, other.x, other.y);
+bool NPC::operator<(const NPC &other) const
+{
+    if (type != other.type) return type < other.type;
+    if (x != other.x) return x < other.x;
+    return y < other.y;
 }
-
 
 Orc::Orc(int x, int y) : NPC(OrcType, x, y) {}
 Orc::Orc(std::istream &is) : NPC(OrcType, is) {}
@@ -58,15 +61,19 @@ void Orc::save(std::ostream &os)
     NPC::save(os);
 }
 
-bool Orc::accept(std::shared_ptr<NPC> other) {
-    if (other->type == BearType) {
+bool Orc::accept(std::shared_ptr<NPC> other)
+{
+    if (other->type == BearType)
+    {
         fight_notify(other, true);
-        return true; // Orc wins
-    } else if (other->type == KnightType) {
-        fight_notify(other, false);
-        return false; // Orc loses
+        return true;
     }
-    return false; // No fight
+    else if (other->type == KnightType)
+    {
+        fight_notify(other, false);
+        return false;
+    }
+    return false;
 }
 
 std::ostream &operator<<(std::ostream &os, Orc &orc)

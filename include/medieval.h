@@ -14,7 +14,14 @@ struct NPC;
 struct Orc;
 struct Knight;
 struct Bear;
-using set_t = std::set<std::shared_ptr<NPC>>;
+
+struct NPCComparator {
+    bool operator()(const std::shared_ptr<NPC>& lhs, const std::shared_ptr<NPC>& rhs) const {
+        return *lhs < *rhs;
+    }
+};
+
+using set_t = std::set<std::shared_ptr<NPC>, NPCComparator>;
 
 enum NpcType
 {
@@ -47,7 +54,7 @@ struct NPC : public std::enable_shared_from_this<NPC>
     friend std::ostream &operator<<(std::ostream &os, NPC &npc);
 
     bool operator==(const NPC &other) const;
-    bool operator<(const NPC& other) const;
+    bool operator<(const NPC &other) const;
 };
 
 struct Orc : public NPC
