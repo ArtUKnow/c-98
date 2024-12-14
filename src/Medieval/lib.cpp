@@ -40,7 +40,7 @@ bool NPC::operator==(const NPC &other) const
     return type == other.type && x == other.x && y == other.y;
 }
 
-bool NPC::operator<(const NPC& other) const {
+bool NPC::operator<(const NPC &other) const {
     if (type != other.type) return type < other.type;
     if (x != other.x) return x < other.x;
     return y < other.y;

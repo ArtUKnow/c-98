@@ -18,9 +18,9 @@ struct Bear;
 struct NPCComparator {
     bool operator()(const std::shared_ptr<NPC>& lhs, const std::shared_ptr<NPC>& rhs) const {
         if (!lhs || !rhs) {
-            return lhs < rhs; // nullptr должен быть "меньше"
+            return lhs < rhs; // nullptr считается "меньшим"
         }
-        return *lhs < *rhs;
+        return *lhs < *rhs; // Используем перегруженный operator< NPC
     }
 };
 
