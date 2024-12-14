@@ -28,30 +28,6 @@ struct IFightObserver {
     virtual void on_fight(const std::shared_ptr<NPC> attacker, const std::shared_ptr<NPC> defender, bool win) = 0;
 };
 
-class TextObserver : public IFightObserver
-{
-private:
-    TextObserver(){};
-
-public:
-    static std::shared_ptr<IFightObserver> get()
-    {
-        static TextObserver instance;
-        return std::shared_ptr<IFightObserver>(&instance, [](IFightObserver *) {});
-    }
-
-    void on_fight(const std::shared_ptr<NPC> attacker, const std::shared_ptr<NPC> defender, bool win) override
-    {
-        if (win)
-        {
-            std::cout << std::endl
-                      << "Murder --------" << std::endl;
-            attacker->print();
-            defender->print();
-        }
-    }
-};
-
 struct NPC : public std::enable_shared_from_this<NPC>
 {
     NpcType type;
@@ -101,6 +77,30 @@ struct Bear : public NPC
     void save(std::ostream &os) override;
     bool accept(std::shared_ptr<NPC> other) override;
     friend std::ostream &operator<<(std::ostream &os, Bear &bear);
+};
+
+class TextObserver : public IFightObserver
+{
+private:
+    TextObserver(){};
+
+public:
+    static std::shared_ptr<IFightObserver> get()
+    {
+        static TextObserver instance;
+        return std::shared_ptr<IFightObserver>(&instance, [](IFightObserver *) {});
+    }
+
+    void on_fight(const std::shared_ptr<NPC> attacker, const std::shared_ptr<NPC> defender, bool win) override
+    {
+        if (win)
+        {
+            std::cout << std::endl
+                      << "Murder --------" << std::endl;
+            attacker->print();
+            defender->print();
+        }
+    }
 };
 
 std::shared_ptr<NPC> factory(std::istream &is);
