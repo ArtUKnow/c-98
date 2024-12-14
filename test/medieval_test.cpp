@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "../include/medieval.h"
 
+
 // Тест на добавление новых NPC
 TEST(MedievalTest, AddNPC) {
     // Arrange

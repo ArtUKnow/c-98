@@ -1,20 +1,45 @@
 #include "../../include/medieval.h"
 
-Orc::Orc(int x, int y) : NPC(OrcType, x, y) {}
-Orc::Orc(std::istream &is) : NPC(OrcType, is) {}
-
-Knight::Knight(int x, int y) : NPC(KnightType, x, y) {}
-Knight::Knight(std::istream &is) : NPC(KnightType, is) {}
-
-Bear::Bear(int x, int y) : NPC(BearType, x, y) {}
-Bear::Bear(std::istream &is) : NPC(BearType, is) {}
-
 NPC::NPC(NpcType t, int _x, int _y) : type(t), x(_x), y(_y) {}
 NPC::NPC(NpcType t, std::istream &is) : type(t)
 {
     is >> x;
     is >> y;
 }
+
+void NPC::subscribe(std::shared_ptr<IFightObserver> observer)
+{
+   observers.push_back(observer);
+}
+
+void NPC::fight_notify(const std::shared_ptr<NPC> defender, bool win)
+{
+    for (auto &o : observers)
+        o->on_fight(shared_from_this(), defender, win);
+}
+
+bool NPC::is_close(const std::shared_ptr<NPC> &other, size_t distance) const
+{
+    if (std::pow(x - other->x, 2) + std::pow(y - other->y, 2) <= std::pow(distance, 2))
+        return true;
+    else
+        return false;
+}
+
+void NPC::save(std::ostream &os)
+{
+    os << x << std::endl;
+    os << y << std::endl;
+}
+
+std::ostream &operator<<(std::ostream &os, NPC &npc)
+{
+    os << "{ x:" << npc.x << ", y:" << npc.y << "} ";
+    return os;
+}
+
+Orc::Orc(int x, int y) : NPC(OrcType, x, y) {}
+Orc::Orc(std::istream &is) : NPC(OrcType, is) {}
 
 void Orc::print()
 {
@@ -48,6 +73,9 @@ std::ostream &operator<<(std::ostream &os, Orc &orc)
     return os;
 }
 
+Knight::Knight(int x, int y) : NPC(KnightType, x, y) {}
+Knight::Knight(std::istream &is) : NPC(KnightType, is) {}
+
 void Knight::print()
 {
     std::cout << *this;
@@ -79,6 +107,9 @@ std::ostream &operator<<(std::ostream &os, Knight &knight)
     os << "Knight: " << *static_cast<NPC *>(&knight) << std::endl;
     return os;
 }
+
+Bear::Bear(int x, int y) : NPC(BearType, x, y) {}
+Bear::Bear(std::istream &is) : NPC(BearType, is) {}
 
 void Bear::print()
 {
@@ -112,33 +143,103 @@ std::ostream &operator<<(std::ostream &os, Bear &bear)
     return os;
 }
 
-void NPC::subscribe(std::shared_ptr<IFightObserver> observer)
+std::shared_ptr<NPC> factory(std::istream &is)
 {
-   observers.push_back(observer);
-}
-
-void NPC::fight_notify(const std::shared_ptr<NPC> defender, bool win)
-{
-    for (auto &o : observers)
-        o->on_fight(shared_from_this(), defender, win);
-}
-
-bool NPC::is_close(const std::shared_ptr<NPC> &other, size_t distance) const
-{
-    if (std::pow(x - other->x, 2) + std::pow(y - other->y, 2) <= std::pow(distance, 2))
-        return true;
+    std::shared_ptr<NPC> result;
+    int type{0};
+    if (is >> type)
+    {
+        switch (type)
+        {
+        case OrcType:
+            result = std::make_shared<Orc>(is);
+            break;
+        case KnightType:
+            result = std::make_shared<Knight>(is);
+            break;
+        case BearType:
+            result = std::make_shared<Bear>(is);
+            break;
+        }
+    }
     else
-        return false;
+        std::cerr << "unexpected NPC type:" << type << std::endl;
+
+    if (result)
+        result->subscribe(TextObserver::get());
+
+    return result;
 }
 
-void NPC::save(std::ostream &os)
+std::shared_ptr<NPC> factory(NpcType type, int x, int y)
 {
-    os << x << std::endl;
-    os << y << std::endl;
+    std::shared_ptr<NPC> result;
+    switch (type)
+    {
+    case OrcType:
+        result = std::make_shared<Orc>(x, y);
+        break;
+    case KnightType:
+        result = std::make_shared<Knight>(x, y);
+        break;
+    case BearType:
+        result = std::make_shared<Bear>(x, y);
+        break;
+    default:
+        break;
+    }
+    if (result)
+        result->subscribe(TextObserver::get());
+
+    return result;
 }
 
-std::ostream &operator<<(std::ostream &os, NPC &npc)
+void save(const set_t &array, const std::string &filename)
 {
-    os << "{ x:" << npc.x << ", y:" << npc.y << "} ";
+    std::ofstream fs(filename);
+    fs << array.size() << std::endl;
+    for (auto &n : array)
+        n->save(fs);
+    fs.flush();
+    fs.close();
+}
+
+set_t load(const std::string &filename)
+{
+    set_t result;
+    std::ifstream is(filename);
+    if (is.good() && is.is_open())
+    {
+        int count;
+        is >> count;
+        for (int i = 0; i < count; ++i)
+            result.insert(factory(is));
+        is.close();
+    }
+    else
+        std::cerr << "Error: " << std::strerror(errno) << std::endl;
+    return result;
+}
+
+std::ostream &operator<<(std::ostream &os, const set_t &array)
+{
+    for (auto &n : array)
+        n->print();
     return os;
+}
+
+set_t fight(const set_t &array, size_t distance)
+{
+    set_t dead_list;
+
+    for (const auto &attacker : array)
+        for (const auto &defender : array)
+            if ((attacker != defender) && (attacker->is_close(defender, distance)))
+            {
+                bool success = defender->accept(attacker);
+                if (success)
+                    dead_list.insert(defender);
+            }
+
+    return dead_list;
 }
