@@ -20,10 +20,9 @@ struct NPCComparator {
         if (!lhs || !rhs) {
             return lhs < rhs; // nullptr считается "меньшим"
         }
-        return *lhs < *rhs; // Используем перегруженный operator< NPC
+        return lhs->operator<(*rhs); // Явный вызов operator< NPC
     }
 };
-
 
 using set_t = std::set<std::shared_ptr<NPC>, NPCComparator>;
 
