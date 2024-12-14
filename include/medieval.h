@@ -17,12 +17,10 @@ struct Bear;
 
 struct NPCComparator {
     bool operator()(const std::shared_ptr<NPC>& lhs, const std::shared_ptr<NPC>& rhs) const {
-        if (!lhs || !rhs) {
-            return lhs < rhs; // nullptr должен быть "меньше"
-        }
-        return *lhs < *rhs;
+        return lhs < rhs;
     }
 };
+
 
 using set_t = std::set<std::shared_ptr<NPC>, NPCComparator>;
 
@@ -38,14 +36,14 @@ struct IFightObserver {
     virtual void on_fight(const std::shared_ptr<NPC> attacker, const std::shared_ptr<NPC> defender, bool win) = 0;
 };
 
-struct NPC : public std::enable_shared_from_this<NPC> {
-    std::string name;  // Уникальное имя
+struct NPC : public std::enable_shared_from_this<NPC>
+{
     NpcType type;
     int x{0};
     int y{0};
     std::vector<std::shared_ptr<IFightObserver>> observers;
 
-    NPC(NpcType t, int _x, int _y, const std::string& _name);
+    NPC(NpcType t, int _x, int _y);
     NPC(NpcType t, std::istream &is);
 
     void subscribe(std::shared_ptr<IFightObserver> observer);
