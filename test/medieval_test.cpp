@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "../include/medieval.h"
 
-// Тест на добавление новых NPC
+// Test for adding new NPC
 TEST(MedievalTest, AddNPC) {
     // Arrange
     set_t array;
@@ -21,7 +21,7 @@ TEST(MedievalTest, AddNPC) {
     ASSERT_TRUE(array.find(bear) != array.end());
 }
 
-// Тест на сохранение и загрузку NPC
+// Test for saving and loading NPC
 TEST(MedievalTest, SaveLoadNPC) {
     // Arrange
     set_t array;
@@ -49,7 +49,7 @@ TEST(MedievalTest, SaveLoadNPC) {
     ASSERT_TRUE(loaded_array.find(bear) != loaded_array.end());
 }
 
-// Тест на боевой режим
+// Test for fighting NPC
 TEST(MedievalTest, FightNPC) {
     // Arrange
     set_t array;
@@ -70,5 +70,5 @@ TEST(MedievalTest, FightNPC) {
     }
 
     // Assert
-    ASSERT_EQ(dead_list.size(), 1); // Ожидается, что один NPC будет убит
+    ASSERT_EQ(dead_list.size(), 1); // Expecting that one NPC will be killed
 }
