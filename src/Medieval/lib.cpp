@@ -1,4 +1,5 @@
 #include "../../include/medieval.h"
+
 NPC::NPC(NpcType t, int _x, int _y) : type(t), x(_x), y(_y) {}
 NPC::NPC(NpcType t, std::istream &is) : type(t)
 {
@@ -35,6 +36,11 @@ std::ostream &operator<<(std::ostream &os, NPC &npc)
 {
     os << "{ x:" << npc.x << ", y:" << npc.y << "} ";
     return os;
+}
+
+bool NPC::operator==(const NPC &other) const
+{
+    return type == other.type && x == other.x && y == other.y;
 }
 
 Orc::Orc(int x, int y) : NPC(OrcType, x, y) {}
