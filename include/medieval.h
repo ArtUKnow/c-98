@@ -30,13 +30,19 @@ struct IFightObserver {
 
 struct NPC : public std::enable_shared_from_this<NPC>
 {
+    static inline int id_counter = 0; // Статический счетчик ID
+    int id; // Уникальный ID для каждого NPC
     NpcType type;
     int x{0};
     int y{0};
     std::vector<std::shared_ptr<IFightObserver>> observers;
 
-    NPC(NpcType t, int _x, int _y);
-    NPC(NpcType t, std::istream &is);
+    NPC(NpcType t, int _x, int _y) : type(t), x(_x), y(_y), id(id_counter++) {}
+    NPC(NpcType t, std::istream &is) : type(t), id(id_counter++)
+    {
+        is >> x;
+        is >> y;
+    }
 
     void subscribe(std::shared_ptr<IFightObserver> observer);
     void fight_notify(const std::shared_ptr<NPC> defender, bool win);
@@ -46,7 +52,15 @@ struct NPC : public std::enable_shared_from_this<NPC>
     virtual void save(std::ostream &os);
     friend std::ostream &operator<<(std::ostream &os, NPC &npc);
 
-    bool operator==(const NPC &other) const;
+    bool operator==(const NPC &other) const
+    {
+        return id == other.id; // Теперь сравниваем только по ID
+    }
+
+    bool operator<(const NPC &other) const
+    {
+        return id < other.id; // Для использования в std::set
+    }
 };
 
 struct Orc : public NPC

@@ -1,7 +1,6 @@
-#include "../../include/medieval.h"
 
-NPC::NPC(NpcType t, int _x, int _y) : type(t), x(_x), y(_y) {}
-NPC::NPC(NpcType t, std::istream &is) : type(t)
+NPC::NPC(NpcType t, int _x, int _y) : type(t), x(_x), y(_y), id(id_counter++) {}
+NPC::NPC(NpcType t, std::istream &is) : type(t), id(id_counter++)
 {
     is >> x;
     is >> y;
@@ -28,19 +27,13 @@ bool NPC::is_close(const std::shared_ptr<NPC> &other, size_t distance) const
 
 void NPC::save(std::ostream &os)
 {
-    os << x << std::endl;
-    os << y << std::endl;
+    os << id << " " << x << " " << y << std::endl;
 }
 
 std::ostream &operator<<(std::ostream &os, NPC &npc)
 {
-    os << "{ x:" << npc.x << ", y:" << npc.y << "} ";
+    os << "{ id: " << npc.id << ", x: " << npc.x << ", y: " << npc.y << " } ";
     return os;
-}
-
-bool NPC::operator==(const NPC &other) const
-{
-    return type == other.type && x == other.x && y == other.y;
 }
 
 Orc::Orc(int x, int y) : NPC(OrcType, x, y) {}
@@ -62,14 +55,14 @@ bool Orc::accept(std::shared_ptr<NPC> other)
     if (other->type == BearType)
     {
         fight_notify(other, true);
-        return true;
+        return true; // Орк побеждает медведя
     }
     else if (other->type == KnightType)
     {
         fight_notify(other, false);
-        return false;
+        return true; // Орк проигрывает рыцарю
     }
-    return false;
+    return false; // Нейтральные взаимодействия
 }
 
 std::ostream &operator<<(std::ostream &os, Orc &orc)
@@ -97,14 +90,14 @@ bool Knight::accept(std::shared_ptr<NPC> other)
     if (other->type == OrcType)
     {
         fight_notify(other, true);
-        return true;
+        return true; // Рыцарь побеждает орка
     }
     else if (other->type == BearType)
     {
         fight_notify(other, false);
-        return false;
+        return true; // Рыцарь проигрывает медведю
     }
-    return false;
+    return false; // Нейтральные взаимодействия
 }
 
 std::ostream &operator<<(std::ostream &os, Knight &knight)
@@ -132,14 +125,14 @@ bool Bear::accept(std::shared_ptr<NPC> other)
     if (other->type == KnightType)
     {
         fight_notify(other, true);
-        return true;
+        return true; // Медведь побеждает рыцаря
     }
     else if (other->type == OrcType)
     {
         fight_notify(other, false);
-        return false;
+        return true; // Медведь проигрывает орку
     }
-    return false;
+    return false; // Нейтральные взаимодействия
 }
 
 std::ostream &operator<<(std::ostream &os, Bear &bear)
@@ -150,30 +143,30 @@ std::ostream &operator<<(std::ostream &os, Bear &bear)
 
 std::shared_ptr<NPC> factory(std::istream &is)
 {
-    std::shared_ptr<NPC> result;
-    int type{0};
-    if (is >> type)
+    int type, id, x, y;
+    if (is >> id >> type >> x >> y)
     {
+        std::shared_ptr<NPC> result;
         switch (type)
         {
         case OrcType:
-            result = std::make_shared<Orc>(is);
+            result = std::make_shared<Orc>(x, y);
             break;
         case KnightType:
-            result = std::make_shared<Knight>(is);
+            result = std::make_shared<Knight>(x, y);
             break;
         case BearType:
-            result = std::make_shared<Bear>(is);
+            result = std::make_shared<Bear>(x, y);
             break;
+        default:
+            std::cerr << "Unknown NPC type: " << type << std::endl;
+            return nullptr;
         }
-    }
-    else
-        std::cerr << "unexpected NPC type:" << type << std::endl;
-
-    if (result)
+        result->id = id; // Восстанавливаем ID
         result->subscribe(TextObserver::get());
-
-    return result;
+        return result;
+    }
+    return nullptr;
 }
 
 std::shared_ptr<NPC> factory(NpcType type, int x, int y)
@@ -238,13 +231,22 @@ set_t fight(const set_t &array, size_t distance)
     set_t dead_list;
 
     for (const auto &attacker : array)
+    {
         for (const auto &defender : array)
-            if ((attacker != defender) && (attacker->is_close(defender, distance)))
+        {
+            if (attacker != defender && attacker->is_close(defender, distance))
             {
-                bool success = defender->accept(attacker);
-                if (success)
+                if (!defender->accept(attacker)) // Если защитник проиграл
                     dead_list.insert(defender);
             }
+        }
+    }
+
+    for (const auto &dead : dead_list)
+    {
+        std::cout << "NPC убит: ";
+        dead->print();
+    }
 
     return dead_list;
 }

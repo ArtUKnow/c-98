@@ -9,8 +9,8 @@ int main()
     std::cout << "Generating ..." << std::endl;
     for (size_t i = 0; i < 100; ++i)
         array.insert(factory(NpcType(std::rand() % 3 + 1),
-                             std::rand() % 501,
-                             std::rand() % 501));
+                              std::rand() % 501,
+                              std::rand() % 501));
     std::cout << "Saving ..." << std::endl;
 
     save(array, "npc.txt");
