@@ -2,7 +2,6 @@
 #include <iostream>
 #include <memory>
 
-
 int main()
 {
     set_t array;
