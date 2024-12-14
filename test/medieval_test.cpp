@@ -72,3 +72,20 @@ TEST(MedievalTest, FightNPC) {
     // Assert
     ASSERT_EQ(dead_list.size(), 1); // Expecting that one NPC will be killed
 }
+
+TEST(MedievalTest, Comparator) {
+    set_t array;
+    std::shared_ptr<NPC> orc = std::make_shared<Orc>(100, 100);
+    std::shared_ptr<NPC> knight = std::make_shared<Knight>(200, 200);
+    std::shared_ptr<NPC> bear = std::make_shared<Bear>(300, 300);
+    array.insert(orc);
+    array.insert(knight);
+    array.insert(bear);
+
+    auto it = array.begin();
+    ASSERT_EQ((*it)->type, OrcType); // Orc должен быть первым, если < определен правильно
+    ++it;
+    ASSERT_EQ((*it)->type, KnightType);
+    ++it;
+    ASSERT_EQ((*it)->type, BearType);
+}
