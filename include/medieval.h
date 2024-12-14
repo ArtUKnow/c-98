@@ -15,17 +15,6 @@ struct Orc;
 struct Knight;
 struct Bear;
 
-struct NPCComparator {
-    bool operator()(const std::shared_ptr<NPC>& lhs, const std::shared_ptr<NPC>& rhs) const {
-        if (!lhs || !rhs) {
-            return lhs < rhs; // nullptr считается "меньшим"
-        }
-        return lhs->operator<(*rhs); // Явный вызов operator< NPC
-    }
-};
-
-using set_t = std::set<std::shared_ptr<NPC>, NPCComparator>;
-
 enum NpcType
 {
     Unknown = 0,
@@ -59,6 +48,19 @@ struct NPC : public std::enable_shared_from_this<NPC>
     bool operator==(const NPC &other) const;
     bool operator<(const NPC &other) const;
 };
+
+
+struct NPCComparator {
+    bool operator()(const std::shared_ptr<NPC>& lhs, const std::shared_ptr<NPC>& rhs) const {
+        if (!lhs || !rhs) {
+            return lhs < rhs; // nullptr считается "меньшим"
+        }
+        return lhs->operator<(*rhs); // Явный вызов operator< NPC
+    }
+};
+
+using set_t = std::set<std::shared_ptr<NPC>, NPCComparator>;
+
 
 struct Orc : public NPC
 {
