@@ -17,9 +17,10 @@ struct Bear;
 
 struct NPCComparator {
     bool operator()(const std::shared_ptr<NPC>& lhs, const std::shared_ptr<NPC>& rhs) const {
-        return *lhs < *rhs;
+        return lhs < rhs;
     }
 };
+
 
 using set_t = std::set<std::shared_ptr<NPC>, NPCComparator>;
 
