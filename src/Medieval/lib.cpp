@@ -242,16 +242,11 @@ set_t fight(const set_t &array, size_t distance)
 
     for (const auto &attacker : array) {
         for (const auto &defender : array) {
-            // Проверяем, что это разные NPC и что они находятся достаточно близко друг к другу
             if (attacker != defender && attacker->is_close(defender, distance)) {
-                // Нападающий атакует защитника
                 bool attacker_wins = attacker->accept(defender);
-
-                // Если нападающий побеждает, защитник умирает
                 if (attacker_wins) {
                     dead_list.insert(defender);
                 } 
-                // Иначе нападающий умирает
                 else {
                     dead_list.insert(attacker);
                 }
