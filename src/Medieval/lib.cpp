@@ -20,10 +20,7 @@ void NPC::fight_notify(const std::shared_ptr<NPC> defender, bool win)
 
 bool NPC::is_close(const std::shared_ptr<NPC> &other, size_t distance) const
 {
-    if (std::pow(x - other->x, 2) + std::pow(y - other->y, 2) <= std::pow(distance, 2))
-        return true;
-    else
-        return false;
+    return std::pow(x - other->x, 2) + std::pow(y - other->y, 2) <= std::pow(distance, 2);
 }
 
 void NPC::save(std::ostream &os)
@@ -41,6 +38,12 @@ std::ostream &operator<<(std::ostream &os, NPC &npc)
 bool NPC::operator==(const NPC &other) const
 {
     return type == other.type && x == other.x && y == other.y;
+}
+
+bool NPC::operator<(const NPC &other) const {
+    if (type != other.type) return type < other.type;
+    if (x != other.x) return x < other.x;
+    return y < other.y;
 }
 
 Orc::Orc(int x, int y) : NPC(OrcType, x, y) {}
@@ -237,14 +240,19 @@ set_t fight(const set_t &array, size_t distance)
 {
     set_t dead_list;
 
-    for (const auto &attacker : array)
-        for (const auto &defender : array)
-            if ((attacker != defender) && (attacker->is_close(defender, distance)))
-            {
-                bool success = defender->accept(attacker);
-                if (success)
+    for (const auto &attacker : array) {
+        for (const auto &defender : array) {
+            if (attacker != defender && attacker->is_close(defender, distance)) {
+                bool attacker_wins = attacker->accept(defender);
+                if (attacker_wins) {
                     dead_list.insert(defender);
+                } 
+                else {
+                    dead_list.insert(attacker);
+                }
             }
+        }
+    }
 
     return dead_list;
 }

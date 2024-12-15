@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "../include/medieval.h"
 
-
 TEST(MedievalTest, AddNPC) {
     set_t array;
     std::shared_ptr<NPC> orc = std::make_shared<Orc>(100, 100);
@@ -30,6 +29,11 @@ TEST(MedievalTest, SaveLoadNPC) {
     save(array, "test_npc.txt");
     set_t loaded_array = load("test_npc.txt");
 
+    std::cout << "Loaded array contents:" << std::endl;
+    for (const auto& npc : loaded_array) {
+        npc->print();
+    }
+
     ASSERT_EQ(loaded_array.size(), 3);
     ASSERT_TRUE(loaded_array.find(orc) != loaded_array.end());
     ASSERT_TRUE(loaded_array.find(knight) != loaded_array.end());
@@ -37,6 +41,18 @@ TEST(MedievalTest, SaveLoadNPC) {
 }
 
 TEST(MedievalTest, FightNPC) {
+    set_t npcs;
+    npcs.insert(std::make_shared<Orc>(0, 0));
+    npcs.insert(std::make_shared<Knight>(3, 4));
+    npcs.insert(std::make_shared<Bear>(10, 10));
+
+    auto dead_list = fight(npcs, 5);
+
+    EXPECT_EQ(dead_list.size(), 1);
+}
+
+
+TEST(MedievalTest, Comparator) {
     set_t array;
     std::shared_ptr<NPC> orc = std::make_shared<Orc>(100, 100);
     std::shared_ptr<NPC> knight = std::make_shared<Knight>(200, 200);
@@ -45,7 +61,10 @@ TEST(MedievalTest, FightNPC) {
     array.insert(knight);
     array.insert(bear);
 
-    set_t dead_list = fight(array, 100);
-
-    ASSERT_EQ(dead_list.size(), 1);
+    auto it = array.begin();
+    ASSERT_EQ((*it)->type, OrcType);
+    ++it;
+    ASSERT_EQ((*it)->type, KnightType);
+    ++it;
+    ASSERT_EQ((*it)->type, BearType);
 }
