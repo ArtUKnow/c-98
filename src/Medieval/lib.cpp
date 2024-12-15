@@ -6,7 +6,6 @@ NPC::NPC(NpcType t, std::istream &is) : type(t)
     is >> x;
     is >> y;
 }
-
 void NPC::subscribe(std::shared_ptr<IFightObserver> observer)
 {
    observers.push_back(observer);
