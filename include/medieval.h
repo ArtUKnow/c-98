@@ -9,6 +9,20 @@
 #include <fstream>
 #include <set>
 #include <math.h>
+#include <iostream>
+#include <memory>
+#include <thread>
+#include <mutex>
+#include <shared_mutex>
+#include <condition_variable>
+#include <atomic>
+#include <unordered_map>
+#include <chrono>
+#include <random>
+#include <vector>
+#include <cstdlib>
+#include <algorithm>
+#include <set>
 
 struct NPC;
 struct Orc;

@@ -1,18 +1,4 @@
 #include "../../include/medieval.h"
-#include <iostream>
-#include <memory>
-#include <thread>
-#include <mutex>
-#include <shared_mutex>
-#include <condition_variable>
-#include <atomic>
-#include <unordered_map>
-#include <chrono>
-#include <random>
-#include <vector>
-#include <cstdlib>
-#include <algorithm>
-#include <set>
 
 static const int MAP_WIDTH  = 100;
 static const int MAP_HEIGHT = 100;
