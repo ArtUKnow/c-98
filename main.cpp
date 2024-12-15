@@ -2,10 +2,8 @@
 #include <iostream>
 #include <memory>
 
-int main()
-{
+int main(){
     set_t array;
-
     std::cout << "Generating ..." << std::endl;
     for (size_t i = 0; i < 100; ++i)
         array.insert(factory(NpcType(std::rand() % 3 + 1),
