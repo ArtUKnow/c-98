@@ -51,27 +51,16 @@ TEST(MedievalTest, SaveLoadNPC) {
 
 // Test for fighting NPC
 TEST(MedievalTest, FightNPC) {
-    // Arrange
-    set_t array;
-    std::shared_ptr<NPC> orc = std::make_shared<Orc>(100, 100);
-    std::shared_ptr<NPC> knight = std::make_shared<Knight>(200, 200);
-    std::shared_ptr<NPC> bear = std::make_shared<Bear>(300, 300);
-    array.insert(orc);
-    array.insert(knight);
-    array.insert(bear);
+    set_t npcs;
+    npcs.insert(std::make_shared<Orc>(0, 0)); // Орк
+    npcs.insert(std::make_shared<Knight>(3, 4)); // Рыцарь в радиусе 5
+    npcs.insert(std::make_shared<Bear>(10, 10)); // Медведь слишком далеко
 
-    // Act
-    set_t dead_list = fight(array, 100);
+    auto dead_list = fight(npcs, 5); // Расстояние для боя = 5
 
-    // Log the contents of the dead list
-    std::cout << "Dead list contents:" << std::endl;
-    for (const auto& npc : dead_list) {
-        npc->print();
-    }
-
-    // Assert
-    ASSERT_EQ(dead_list.size(), 1); // Expecting that one NPC will be killed
+    EXPECT_EQ(dead_list.size(), 1); // Должен быть убит только 1 NPC
 }
+
 
 TEST(MedievalTest, Comparator) {
     set_t array;
